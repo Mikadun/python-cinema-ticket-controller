@@ -1,3 +1,4 @@
+import json
 import os
 import pytesseract
 from flask import Flask, flash, request, redirect, url_for
@@ -30,7 +31,13 @@ def upload_file():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'image.png')
             file.save(filepath)
             text = pytesseract.image_to_string(filepath, lang='rus')
-            return redirect(url_for('show', text=text))
+            if not text:
+                text = 'None'
+
+            with open('data.json', 'w', encoding='utf-8') as data_json:
+                json.dump(text, data_json)
+            
+            return redirect(url_for('show'))
     else:
         return '''
         <h1>Upload image</h1>
@@ -40,6 +47,9 @@ def upload_file():
         </form>
         '''
 
-@app.route("/show/<text>")
-def show(text):
-    return f'<h1>{text}</h1>'
+@app.route("/show")
+def show():
+    with open('data.json', 'r', encoding='utf-8') as data_json:
+        text = json.load(data_json)
+    
+    return f'<h4>{text}</h4>'
