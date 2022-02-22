@@ -13,6 +13,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @app.route("/upload", methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -53,3 +54,8 @@ def show():
         text = json.load(data_json)
     
     return f'<h4>{text}</h4>'
+
+
+@app.route("/")
+def home():
+    return redirect(url_for('upload_file'))
