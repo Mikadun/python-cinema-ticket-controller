@@ -4,7 +4,7 @@ import pytesseract
 from flask import Flask, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = './images/'
+UPLOAD_FOLDER = ''
 ALLOWED_EXTENSIONS = set(['png'])
 
 app = Flask(__name__)
@@ -28,7 +28,6 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'image.png')
             file.save(filepath)
             text = pytesseract.image_to_string(filepath, lang='rus')
